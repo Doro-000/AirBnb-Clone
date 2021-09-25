@@ -1,3 +1,12 @@
+function trim(StrList) {
+  let result = StrList.join();
+  if (result.length >= 25) {
+    result = result.slice(0, 25);
+    result += "...";
+  }
+  return result;
+};
+
 function UpdateAmenitiesHeader() {
   let CheckedItems = [];
   let CheckedAmenities = $( "input[name='AmenitiesCheck']:checked" );
@@ -6,7 +15,7 @@ function UpdateAmenitiesHeader() {
     CheckedItems.push($( element ).attr("data-name"));
   });
   if (CheckedItems.length !== 0) {
-    header.text(CheckedItems);
+    header.text(trim(CheckedItems));
   } else {
     header.html("&nbsp;");
   }
