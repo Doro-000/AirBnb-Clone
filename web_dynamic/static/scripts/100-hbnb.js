@@ -6,7 +6,7 @@ function trim(StrList) {
   }
   return result;
 };
-
+      
 function GetAmenities() {
   let CheckedItems = [];
   let CheckedItemsID = [];
@@ -21,20 +21,58 @@ function GetAmenities() {
   return {"items": CheckedItems, "itemsID": CheckedItemsID};
 };
 
-function UpdateAmenitiesHeader() {
-  let CheckedItems = GetAmenities();
-  let header = $( "div.amenities h4" );
+function GetLocations() {
+  let CheckedStates = [];
+  let CheckedStatesID = [];
 
-  if (CheckedItems.items.length !== 0) {
-    header.text(trim(CheckedItems.items));
+  let CheckedCities = [];
+  let CheckedCitiesID = [];
+
+  let States = $( "input[name='StateCheck']:checked" );
+  let Cities = $( "input[name='CityCheck']:checked" );
+
+  States.each(function(index, element) {
+    CheckedStates.push($( element ).attr("data-name"));
+    CheckedStatesID.push($( element ).attr("data-id"));
+  });
+
+  Cities.each(function(index, element) {
+    CheckedCities.push($( element ).attr("data-name"));
+    CheckedCitiesID.push($( element ).attr("data-id"));
+  });
+
+  return {"states": CheckedStates, "statesID": CheckedStatesID, "cities": CheckedCities, "citiesID": CheckedCitiesID};
+};
+
+function UpdateAmenitiesHeader() {
+  let amenities = GetAmenities();
+  let AmenitiesHeader = $( "div.amenities h4" );
+
+  if (amenities.items.length !== 0) {
+    AmenitiesHeader.text(trim(amenities.items));
   } else {
-    header.html("&nbsp;");
-  }  
+    AmenitiesHeader.html("&nbsp;");
+  }
+};
+
+function UpdateLocationsHeader() {
+  let locations = GetLocations();
+  let LocationsHeader = $( "div.locations h4" );
+
+  CheckedLocations = locations.states.concat(locations.cities);
+  console.log(CheckedLocations.cities);
+  if (CheckedLocations.length !== 0) {
+    LocationsHeader.text(trim(CheckedLocations));
+  } else {
+    LocationsHeader.html("&nbsp;");
+  }
 };
 
 function UpdatePlaces() {
   let amenities = GetAmenities();
-  GetPlaces({"amenities": amenities.itemsID});
+  let locations = GetLocations();
+
+  GetPlaces({"states": locations.statesID, "cities": locations.citiesID, "amenities": amenities.itemsID});
 };
 
 function UpdateApiStatus() {
@@ -107,5 +145,8 @@ $( document ).ready(function() {
   GetPlaces({});
 
   $( "input[name='AmenitiesCheck']" ).click(UpdateAmenitiesHeader);
+  $( "input[name='StateCheck']" ).click(UpdateLocationsHeader);
+  $( "input[name='CityCheck']" ).click(UpdateLocationsHeader);
+
   $( "button" ).click(UpdatePlaces);
 });

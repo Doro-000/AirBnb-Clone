@@ -46,6 +46,11 @@ button:hover {
     width: 25%;
     border-right: 1px solid #DDDDDD;
 }
+
+.locations .popover input{
+    margin-right: 10px;
+}
+
 .amenities {
     height: 100%;
     width: 25%;
